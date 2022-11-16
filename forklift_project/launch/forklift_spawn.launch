@@ -1,0 +1,13 @@
+<launch>
+  <arg name="robot_name"  default="mobile_manipulator"/>
+  <arg name="init_x_pos" default="0.0"/>
+  <arg name="init_y_pos" default="0.0"/>
+  <arg name="init_z_pos" default="0.0"/>
+  <arg name="init_yaw"   default="0.0"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro $(find forklift_project)/urdf/mobile_manipulator_forklift.urdf.xacro" />
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+    args="-urdf -model $(arg robot_name) -x $(arg init_x_pos) -y $(arg init_y_pos) -z $(arg init_z_pos) -Y $(arg init_yaw) -param robot_description" />
+
+</launch>
