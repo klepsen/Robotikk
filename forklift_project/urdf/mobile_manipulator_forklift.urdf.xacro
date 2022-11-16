@@ -131,13 +131,13 @@
       <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
     </joint>
 
-    <xacro:link_cylinder link_name="arm_base_link" radius="0.1" length="0.6" density="1" mesh_name="nofile" >
+    <xacro:link_cylinder link_name="arm_base_link" radius="0.1" length="0.5" density="1" mesh_name="nofile" >
       <!-- origin visual -->
-      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
       <!-- origin collision -->
-      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
       <!-- origin interia -->
-      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
     </xacro:link_cylinder>
 
   <transmission name="arm_base_tran">
@@ -154,20 +154,20 @@
     <!-- LINK 1 -->
     <!-- ==================================== -->
     <joint type="revolute" name="link_1_joint">
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <child link="link_1_link"/>
       <parent link="arm_base_link"/>
       <axis xyz="0 1 0" rpy="0 0 0"/>
       <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
     </joint>
 
-    <xacro:link_cylinder link_name="link_1_link" radius="0.1" length="1.155" density="1" mesh_name="nofile" >
+    <xacro:link_cylinder link_name="link_1_link" radius="0.1" length="1" density="1" mesh_name="nofile" >
       <!-- origin visual -->
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <!-- origin collision -->
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <!-- origin interia -->
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
     </xacro:link_cylinder>
 
   <transmission name="link_1_tran">
@@ -185,20 +185,20 @@
     <!-- LINK 2 -->
     <!-- ==================================== -->
     <joint type="revolute" name="link_2_joint">
-      <origin xyz="0 0 1.155" rpy="0 0 0"/>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
       <child link="link_2_link"/>
       <parent link="link_1_link"/>
       <axis xyz="0 1 0" rpy="0 0 0"/>
       <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
     </joint>
 
-    <xacro:link_cylinder link_name="link_2_link" radius="0.1" length="1.155" density="1" mesh_name="nofile" >
+    <xacro:link_cylinder link_name="link_2_link" radius="0.1" length="1" density="1" mesh_name="nofile" >
       <!-- origin visual -->
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <!-- origin collision -->
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <!-- origin interia -->
-      <origin xyz="0 0 0.5775" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
     </xacro:link_cylinder>
 
   <transmission name="link_2_tran">
@@ -215,50 +215,50 @@
     <!-- LINK 3 -->
     <!-- ==================================== -->
     <joint type="revolute" name="link_3_joint">
-      <origin xyz="0 0 1.155" rpy="0 0 0"/>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
       <child link="link_3_link"/>
       <parent link="link_2_link"/>
       <axis xyz="0 1 0" rpy="0 0 0"/>
       <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
     </joint>
 
-  <transmission name="link_3_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="link_3_joint">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="link_3_motor">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-    <xacro:link_cylinder link_name="link_3_link" radius="0.1" length="0.6" density="1" mesh_name="nofile" >
+    <xacro:link_cylinder link_name="link_3_link" radius="0.1" length="1" density="1" mesh_name="nofile" >
       <!-- origin visual -->
-      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <!-- origin collision -->
-      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
       <!-- origin interia -->
-      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
     </xacro:link_cylinder>
+
+    <transmission name="link_3_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="link_3_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="link_3_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
 
     <!-- LINK 4 -->
     <!-- ==================================== -->
     <joint type="revolute" name="link_4_joint">
-      <origin xyz="0 0 0.6" rpy="0 0 0"/>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
       <child link="link_4_link"/>
       <parent link="link_3_link"/>
       <axis xyz="0 1 0" rpy="0 0 0"/>
       <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
     </joint>
 
-    <xacro:link_cylinder link_name="link_4_link" radius="0.1" length="0.4" density="1" mesh_name="nofile" >
+    <xacro:link_cylinder link_name="link_4_link" radius="0.1" length="0.5" density="1" mesh_name="nofile" >
       <!-- origin visual -->
-      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
       <!-- origin collision -->
-      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
       <!-- origin interia -->
-      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
     </xacro:link_cylinder>
 
   <transmission name="link_4_tran">
@@ -271,5 +271,36 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+
+  <!-- LINK 5 -->
+  <!-- ==================================== -->
+  <joint type="revolute" name="link_5_joint">
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    <child link="link_5_link"/>
+    <parent link="link_4_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
+  </joint>
+
+  <xacro:link_cylinder link_name="link_5_link" radius="0.1" length="0.5" density="1" mesh_name="nofile" >
+    <!-- origin visual -->
+    <origin xyz="-0.25 0 0.1" rpy="0 ${pi/2} 0"/>
+    <!-- origin collision -->
+    <origin xyz="-0.25 0 0.1" rpy="0 ${pi/2} 0"/>
+    <!-- origin interia -->
+    <origin xyz="-0.25 0 0.1" rpy="0 ${pi/2} 0"/>
+  </xacro:link_cylinder>
+
+<transmission name="link_5_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="link_5_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="link_5_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
 
 </robot>

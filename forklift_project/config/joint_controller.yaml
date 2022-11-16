@@ -8,7 +8,7 @@ mobile_manipulator_forklift:
   arm_base_controller:
     type: position_controllers/JointPositionController
     joint: arm_base_joint
-  
+
   # Controller
   link_1_controller:
     type: position_controllers/JointPositionController
@@ -28,3 +28,8 @@ mobile_manipulator_forklift:
   link_4_controller:
     type: position_controllers/JointPositionController
     joint: link_4_joint
+
+  # Controller
+  link_5_controller:
+    type: position_controllers/JointPositionController
+    joint: link_5_joint
