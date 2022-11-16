@@ -21,5 +21,12 @@
       <covariance_y>0.000100</covariance_y>
       <covariance_yaw>0.010000</covariance_yaw>
     </plugin>
+
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>mobile_manipulator_forklift</robotNamespace>
+      <controlPeriod>0.001</controlPeriod>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
   </gazebo>
+
 </robot>

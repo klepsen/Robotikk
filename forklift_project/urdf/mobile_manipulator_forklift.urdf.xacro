@@ -4,7 +4,7 @@
   <xacro:include filename="$(find forklift_project)/urdf/common_macros.xacro" />
 
   <gazebo>
-    <static>true</static>
+    <static>false</static>
   </gazebo>
 
 <xacro:include filename="$(find forklift_project)/urdf/mobile_manipulator_forklift.urdf.gazebo" />
@@ -140,6 +140,17 @@
       <origin xyz="0 0 0.3" rpy="0 0 0"/>
     </xacro:link_cylinder>
 
+  <transmission name="arm_base_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_base_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_base_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
     <!-- LINK 1 -->
     <!-- ==================================== -->
     <joint type="revolute" name="link_1_joint">
@@ -158,6 +169,17 @@
       <!-- origin interia -->
       <origin xyz="0 0 0.5775" rpy="0 0 0"/>
     </xacro:link_cylinder>
+
+  <transmission name="link_1_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="link_1_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="link_1_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
 
     <!-- LINK 2 -->
@@ -179,15 +201,37 @@
       <origin xyz="0 0 0.5775" rpy="0 0 0"/>
     </xacro:link_cylinder>
 
+  <transmission name="link_2_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="link_2_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="link_2_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
     <!-- LINK 3 -->
     <!-- ==================================== -->
     <joint type="revolute" name="link_3_joint">
       <origin xyz="0 0 1.155" rpy="0 0 0"/>
       <child link="link_3_link"/>
       <parent link="link_2_link"/>
-      <axis xyz="0 0 1" rpy="0 0 0"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
       <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
     </joint>
+
+  <transmission name="link_3_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="link_3_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="link_3_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
     <xacro:link_cylinder link_name="link_3_link" radius="0.1" length="0.6" density="1" mesh_name="nofile" >
       <!-- origin visual -->
@@ -204,7 +248,7 @@
       <origin xyz="0 0 0.6" rpy="0 0 0"/>
       <child link="link_4_link"/>
       <parent link="link_3_link"/>
-      <axis xyz="0 0 1" rpy="0 0 0"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
       <limit effort="100" velocity="100" lower="-${pi/2}" upper="${pi/2}"/>
     </joint>
 
@@ -216,5 +260,16 @@
       <!-- origin interia -->
       <origin xyz="0 0 0.2" rpy="0 0 0"/>
     </xacro:link_cylinder>
+
+  <transmission name="link_4_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="link_4_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="link_4_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
 </robot>

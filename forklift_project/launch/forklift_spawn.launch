@@ -10,4 +10,13 @@
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
     args="-urdf -model $(arg robot_name) -x $(arg init_x_pos) -y $(arg init_y_pos) -z $(arg init_z_pos) -Y $(arg init_yaw) -param robot_description" />
 
+ <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="100.0" />
+    <param name="tf_prefix" value="mobile_manipulator" />
+  </node>
+
+  <rosparam file="$(find forklift_project)/config/joint_controller.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="mobile_manipulator_forklift"
+    args="joint_state_controller arm_base_controller link_1_controller link_2_controller link_3_controller link_4_controller"/>
 </launch>
