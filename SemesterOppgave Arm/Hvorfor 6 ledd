@@ -1,0 +1,5 @@
+We have chosen to use 6 joints for our arm, because we want to two joints (first and last) to move i the yaw direction, 
+and the rest to move in pitch direction.
+This means we will have 4 links in the pitch direction, which may be unnecessary, but the reason we want to keep this,
+is because it will help us keep a smooth cartesian trajectory. It will also help us fold the arm better in resting
+posistion.
