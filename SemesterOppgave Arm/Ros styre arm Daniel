@@ -29,6 +29,8 @@ palleLoft = transl(2, 0, 0) * trotx(0)      %Mellompunkt
 
 taVekk = transl(2, 2, 0) *trotx(0)          %Sluttpunkt
 
+%Kan lage flere punkt
+
 % taPaPlass = transl(3, 2, 1.1) * trotx(0)
 % 
 % taPaPlassSettNed = transl(3, 2, 1) * trotx(0)
@@ -43,15 +45,11 @@ taVekk = transl(2, 2, 0) *trotx(0)          %Sluttpunkt
 % 
 % taPaPlassSettNed = transl(3, 2, 1) * rpy2tr(0,0,0, 'deg')
 
-% hold on
-% trplot(palle)
-% 
-% hold on 
-% trplot(taPaPlassSettNed)
 
-v1 = ctraj(palle, palleLoft, 50);
+%Lager baner
+v1 = ctraj(palle, palleLoft, 50);         %Startpunkt til mellompunkt
 
-v2 = ctraj(palleLoft, taVekk, 50);
+v2 = ctraj(palleLoft, taVekk, 50);        %Mellompunkt til sluttpunkt
 
 % v3 = ctraj(taVekk, taPaPlass, 50);
 % 
