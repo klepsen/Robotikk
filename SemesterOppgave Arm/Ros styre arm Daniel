@@ -27,7 +27,7 @@ palle = transl(3, 0, 0) * trotx(0)          %Startpunk, transl gir posisjon
 
 palleLoft = transl(2, 0, 0) * trotx(0)      %Mellompunkt 
 
-taVekk = transl(2, 2, 0) *trotx(0)          %Sluttpunkt
+% taVekk = transl(2, 2, 0) *trotx(0)          %Sluttpunkt
 
 %Kan lage flere punkt
 
@@ -49,7 +49,7 @@ taVekk = transl(2, 2, 0) *trotx(0)          %Sluttpunkt
 %Lager baner
 v1 = ctraj(palle, palleLoft, 50);         %Startpunkt til mellompunkt
 
-v2 = ctraj(palleLoft, taVekk, 50);        %Mellompunkt til sluttpunkt
+% v2 = ctraj(palleLoft, taVekk, 50);        %Mellompunkt til sluttpunkt
 
 % v3 = ctraj(taVekk, taPaPlass, 50);
 % 
@@ -57,7 +57,7 @@ v2 = ctraj(palleLoft, taVekk, 50);        %Mellompunkt til sluttpunkt
 
 rV1 = my_robot.ikcon(v1);       %Lager bane 1
 
-rV2 = my_robot.ikcon(v2);       %Lager bane 2
+%rV2 = my_robot.ikcon(v2);       %Lager bane 2
 
 % rV3 = my_robot.ikcon(v3);
 % 
@@ -65,9 +65,9 @@ rV2 = my_robot.ikcon(v2);       %Lager bane 2
 
 my_robot.plot(rV1)              %Bane 1
 
-hold on
+% hold on
 
-my_robot.plot(rV2)              %Bane 2
+% my_robot.plot(rV2)              %Bane 2
 
 % hold on
 % 
