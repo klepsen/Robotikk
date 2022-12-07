@@ -1,0 +1,398 @@
+<?xml version="1.0"?>
+<!--
+  Robot model adapted from https://github.com/CIR-KIT/steer_drive_ros/blob/kinetic-devel/steer_drive_controller/test/common/urdf/steerbot.xacro
+
+  Modifications:
+    Remove base_footprint link. Useful for navigation but not necessary for a simple example.
+    Added materials for URDF
+    Updated inertials
+
+  Geometry:
+    The Ackermann steering controllers require the longitudinal
+    separation between the front and back wheel axes and the
+    lateral separation between the left and right front steering axes.
+
+    For this model:
+    wheel_separation_h = base_length - 2 * axle_offset = 0.4
+    wheel_separation_w = base_width  + 2 * axle_offset = 0.4
+-->
+<robot name="mobile_manipulator_forklift" xmlns:xacro="http://wiki.ros.org/xacro">
+  <!-- Include xacro for inertials, materials and wheels -->
+  <xacro:include filename="$(find forklift_project)/urdf/wheel.xacro"/>
+  <xacro:include filename="$(find forklift_project)/urdf/common_macros.xacro" />
+
+
+  <xacro:property name="robot_namespace" value="/mobile_manipulator_forklift"/>
+
+  <!-- Gazebo plugins -->
+  <gazebo>
+    <!-- Load ros_control plugin -->
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>${robot_namespace}</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <legacyModeNS>false</legacyModeNS>
+    </plugin>
+
+    <!-- Load gazebo_ros plugin. Publish passive (non-actuated) joints from Gazebo -->
+    <plugin name="gazebo_ros_joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+        <robotNamespace>${robot_namespace}</robotNamespace>
+        <jointName>
+            front_wheel_joint
+        </jointName>
+        <updateRate>50</updateRate>
+        <alwaysOn>true</alwaysOn>
+    </plugin>
+  </gazebo>
+
+
+
+  <!-- Math constants -->
+  <xacro:property name="deg_to_rad" value="0.01745329251994329577"/>
+
+  <!-- Robot base dimensions -->
+  <xacro:property name="base_length" value="1.5" />
+  <xacro:property name="base_width" value="0.12" />
+  <xacro:property name="base_height" value="0.1" />
+  <xacro:property name="base_mass" value="5" />
+
+  <!-- Wheel link dimensions -->
+  <xacro:property name="wheel_radius" value="0.1" />
+  <xacro:property name="wheel_thickness" value="0.1" />
+  <xacro:property name="wheel_mass" value="1" />
+
+  <!-- Steering link dimensions -->
+  <xacro:property name="steer_radius" value="0.05" />
+  <xacro:property name="steer_thickness" value="0.02" />
+  <xacro:property name="steer_mass" value="1" />
+
+  <!-- Axle positions -->
+  <xacro:property name="axle_offset" value="1.45" />
+  <xacro:property name="steer_offset" value="0.02" />
+
+  <!-- Base link -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+      <material name="green" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </collision>
+    <xacro:solid_cuboid_inertial
+        rpy="0 0 0" xyz="0 0 0"
+        mass="${base_mass}"
+        x="${base_length}" y="${base_width}" z="${base_height}" />
+  </link>
+
+  <!-- Front steer and rear wheel joints required for ackermann_steering_controller -->
+  <xacro:front_steer
+    name="front"
+    parent="base"
+    steer_radius="${steer_radius}"
+    steer_thickness="${steer_thickness}"
+    steer_mass="${steer_mass}"
+    base_length="${base_length}"
+    base_width="${base_width}"
+    axle_offset="${axle_offset}"
+    steer_height="${wheel_radius+steer_offset}">
+  </xacro:front_steer>
+
+  <xacro:front_wheel
+    name="front"
+    parent="front_steer"
+    wheel_radius="${wheel_radius}"
+    wheel_thickness="${wheel_thickness}"
+    wheel_mass="${wheel_mass}">
+    <origin xyz="0 0 ${-wheel_radius-steer_offset}" rpy="${-90 * deg_to_rad} 0 0"/>
+  </xacro:front_wheel>
+
+  <xacro:rear_wheel
+    name="rear"
+    parent="base"
+    wheel_radius="${wheel_radius}"
+    wheel_thickness="${wheel_thickness}"
+    wheel_mass="${wheel_mass}">
+    <origin xyz="${-base_length/2+axle_offset} 0 0" rpy="${-90 * deg_to_rad} 0 0"/>
+  </xacro:rear_wheel>
+
+  <!-- Colour -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+
+  <!-- FRONT LEFT WHEEL -->
+<!-- ==================================== -->
+<joint type="continuous" name="wheel_front_left_joint">
+  <origin xyz="0.60 0.95 0.30" rpy="-${pi/2} 0 0"/>
+  <child link="wheel_front_left_link"/>
+  <parent link="base_link"/>
+  <axis xyz="0 0 1" rpy="0 0 0"/>
+  <limit effort="100" velocity="100"/>
+</joint>
+
+<xacro:link_cylinder link_name="wheel_front_left_link" radius="0.4" length="0.4" density="1" mesh_name="nofile" >
+  <!-- origin visual -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin collision -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin interia -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</xacro:link_cylinder>
+
+
+<!-- FRONT RIGHT WHEEL -->
+<!-- ==================================== -->
+<joint type="continuous" name="wheel_front_right_joint">
+  <origin xyz="0.60 -0.95 0.30" rpy="-${pi/2} 0 0"/>
+  <child link="wheel_front_right_link"/>
+  <parent link="base_link"/>
+  <axis xyz="0 0 1" rpy="0 0 0"/>
+  <limit effort="100" velocity="100"/>
+</joint>
+
+<xacro:link_cylinder link_name="wheel_front_right_link" radius="0.4" length="0.4" density="1" >
+  <!-- origin visual -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin collision -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin interia -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</xacro:link_cylinder>
+
+
+<!-- REAR LEFT WHEEL -->
+<!-- ==================================== -->
+<joint type="continuous" name="wheel_rear_left_joint">
+  <origin xyz="-0.60 0.95 0.30" rpy="-${pi/2} 0 0"/>
+  <child link="wheel_rear_left_link"/>
+  <parent link="base_link"/>
+  <axis xyz="0 0 1" rpy="0 0 0"/>
+  <limit effort="100" velocity="100"/>
+</joint>
+
+<xacro:link_cylinder link_name="wheel_rear_left_link" radius="0.4" length="0.4" density="1" mesh_name="nofile" >
+  <!-- origin visual -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin collision -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin interia -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</xacro:link_cylinder>
+
+
+<!-- REAR RIGHT WHEEL -->
+<!-- ==================================== -->
+<joint type="continuous" name="wheel_rear_right_joint">
+  <origin xyz="-0.60 -0.95 0.30" rpy="-${pi/2} 0 0"/>
+  <child link="wheel_rear_right_link"/>
+  <parent link="base_link"/>
+  <axis xyz="0 0 1" rpy="0 0 0"/>
+  <limit effort="100" velocity="100"/>
+</joint>
+
+<xacro:link_cylinder link_name="wheel_rear_right_link" radius="0.4" length="0.4" density="1" mesh_name="nofile" >
+  <!-- origin visual -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin collision -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <!-- origin interia -->
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</xacro:link_cylinder>
+
+
+
+  <!--############################### -->
+  <!-- ROBOTIC ARM -->
+  <!--############################### -->
+
+  <!-- ARM BASE -->
+  <!-- ==================================== -->
+  <joint type="revolute" name="arm_base_joint">
+    <origin xyz="0 0 1" rpy="0 0 0"/>
+    <child link="arm_base_link"/>
+    <parent link="base_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
+  </joint>
+ 
+  <xacro:link_cylinder link_name="arm_base_link" radius="0.1" length="0.5" density="1" mesh_name="nofile" >
+    <!-- origin visual -->
+    <origin xyz="0 0 0.25" rpy="0 0 0"/>
+    <!-- origin collision -->
+    <origin xyz="0 0 0.25" rpy="0 0 0"/>
+    <!-- origin interia -->
+    <origin xyz="0 0 0.25" rpy="0 0 0"/>
+  </xacro:link_cylinder>
+ 
+<transmission name="arm_base_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="arm_base_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="arm_base_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+ 
+  <!-- LINK 1 -->
+  <!-- ==================================== -->
+  <joint type="revolute" name="link_1_joint">
+    <origin xyz="0.1 0 0.25" rpy="0 1.57079633 0"/>
+    <child link="link_1_link"/>
+    <parent link="arm_base_link"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
+  </joint>
+ 
+  <xacro:link_cylinder link_name="link_1_link" radius="0.1" length="1" density="1" mesh_name="nofile" >
+    <!-- origin visual -->
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    <!-- origin collision -->
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    <!-- origin interia -->
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+  </xacro:link_cylinder>
+ 
+<transmission name="link_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="link_1_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="link_1_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+    <!-- LINK 2 -->
+    <!-- ==================================== -->
+    <joint type="revolute" name="link_2_joint">
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <child link="link_2_link"/>
+      <parent link="link_1_link"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
+    </joint>
+
+    <xacro:link_cylinder link_name="link_2_link" radius="0.1" length="1" density="1" mesh_name="nofile" >
+      <!-- origin visual -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <!-- origin collision -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <!-- origin interia -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    </xacro:link_cylinder>
+
+  <transmission name="link_2_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="link_2_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="link_2_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+    <!-- LINK 3 -->
+    <!-- ==================================== -->
+    <joint type="revolute" name="link_3_joint">
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <child link="link_3_link"/>
+      <parent link="link_2_link"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
+    </joint>
+
+    <xacro:link_cylinder link_name="link_3_link" radius="0.1" length="1" density="1" mesh_name="nofile" >
+      <!-- origin visual -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <!-- origin collision -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <!-- origin interia -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    </xacro:link_cylinder>
+
+    <transmission name="link_3_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="link_3_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="link_3_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <!-- LINK 4 -->
+    <!-- ==================================== -->
+    <joint type="revolute" name="link_4_joint">
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <child link="link_4_link"/>
+      <parent link="link_3_link"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
+    </joint>
+
+    <xacro:link_cylinder link_name="link_4_link" radius="0.1" length="0.5" density="1" mesh_name="nofile" >
+      <!-- origin visual -->
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
+      <!-- origin collision -->
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
+      <!-- origin interia -->
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
+    </xacro:link_cylinder>
+
+  <transmission name="link_4_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="link_4_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="link_4_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ <!-- endret z fra 1 til 0 her -->
+
+  <!-- LINK 5 -->
+  <!-- ==================================== -->
+  <joint type="revolute" name="link_5_joint">
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    <child link="link_5_link"/>
+    <parent link="link_4_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100" lower="-${pi}" upper="${pi}"/>
+  </joint>
+
+  <xacro:link_cylinder link_name="link_5_link" radius="0.1" length="0.5" density="1" mesh_name="nofile" >
+    <!-- origin visual -->2
+    <origin xyz="0 0 0.1" rpy="0 ${pi/2} 0"/>
+    <!-- origin collision -->
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <!-- origin interia -->
+    <origin xyz="0 0 0.1" rpy="0 ${pi/2} 0"/>
+  </xacro:link_cylinder>
+
+<transmission name="link_5_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="link_5_joint">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="link_5_motor">
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+
+</robot>
